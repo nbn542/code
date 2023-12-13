@@ -1,32 +1,30 @@
 #include<iostream>
-#include<conio.h>
 #include<graphics.h>
 #include<stdlib.h>
-#include<dos.h>
-using namespace std; 
-class walkingman 
-{ 
-int rhx,rhy; 
-public: 
+using namespace std;
+class walkingman
+{
+int rhx,rhy;
+public:
 void draw(int,int);
 void draw(int);
 };
-void walkingman::draw(int i) 
-{ 
+void walkingman::draw(int i)
+{
 line(20,380,580,380);
-if(i%2) 
-{ 
+if(i%2)
+{
 line(25+i,380,35+i,340);
 line(45+i,380,35+i,340);
 line(35+i,310,25+i,330);
 delay(20);
-} 
+}
 else
-{ 
+{
 line(35+i,340,35+i,310);
 line(35+i,310,40+i,330);
 delay(20);
-} 
+}
 line(35+i,340,35+i,310);
 circle(35+i,300,10);
 line(35+i,310,50+i,330);
@@ -34,33 +32,87 @@ line(50+i,330,50+i,280);
 line(15+i,280,85+i,280);
 arc(50+i,280,0,180,35);
 arc(55+i,330,180,360,5);
-} 
-void walkingman::draw(int x,int y) 
-{ 
-int j; 
-rhx=x; 
-rhy=y; 
+}
+void walkingman::draw(int x,int y)
+{
+	int j;
+rhx=x;
+rhy=y;
 for
-(j=0;j<100;j++) 
-{ 
+(j=0;j<100;j++)
+{
 outtextxy(rand()%rhx,rand()%(rhy-50),"|");
 setcolor(WHITE);
-} 
-} 
+}
+}
 int main()
-{ 
-int gd=DETECT,gm; 
-int rhx,rhy,j,i; 
-walkingman obj; 
+{
+int gd=DETECT,gm;
+int rhx,rhy,j,i;
+walkingman obj;
 initgraph(&gd,&gm,"");
 for(i=0;i<500;i++)
-{ 
+{
 obj.draw(i);
-rhx=getmaxx(); 
-rhy=getmaxy(); 
+rhx=getmaxx();
+rhy=getmaxy();
 obj.draw(rhx,rhy);
 delay(150);
-cleardevice(); 
-} 
+cleardevice();
+}
 getch();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Computer Graphics has revolutionized almost every computer-based
+application in science and technology. Information technology is a trend
+today.The importance of computer graphics lies in its applications. In
+engineering applications (e.g. automotiveand aerospace) the ability to quickly 
+visualize newly designed shapes is indispensible. Computer graphics has also 
+expanded the boundaries of art and entertainment.
+
+Line function: line function is used to draw a line from a point(x1,y1) 
+to point(x2,y2)i.e.(x1,y1) and(x2,y2) are end points of the line. The code 
+given below draws a line.
+Declaration: - void line (int x1, int y1, int x2, int y2);
+
+Circle function: Circle function is used to draw a circle with center 
+(x, y) and thirdparameter specifies the radius of the circle. The code
+given below draws a circle.
+Declaration: - void circle (int x, int y, int radius)
+
+Setcolor function: In Turbo Graphics each color is assigned a number. 
+Total 16 colorsare available.  For Example :- BLACK is 
+assigned 0, RED is assigned 4 etc. 
+Declaration: - void setcolor (int color);
+
+Outtextxy function:Outtextxy function display text or string at a 
+specified point(x, y)on the screen.
+Declaration: - void Outtextxy (int x, int y, char *string);
+x, y are coordinates of the point and third argument contains the
+address ofstring to be displayed.
+
+Putpixel function: putpixel function plots a pixel at location (x, y) of specified
+color.
+Declaration: - void putpixel (int x, int y, int color);*/
