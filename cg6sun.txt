@@ -1,215 +1,255 @@
+
+
 #include<iostream>
-#include<math.h>
+#include<stdlib.h>
+
+#ifdef __APPLE__
+#include<openGL/openGL.h>
+#include<GLUT/glut.h>
+#else 
 #include<GL/glut.h>
-using namespace std; 
-typedef float Matrix4 [4][4];
-Matrix4 theMatrix; 
-static GLfloat input[8][3]=
-{ 
-{40,40,-50},{90,40,-50},{90,90,-50},{40,90,-50},
-{30,30,0},{80,30,0},{80,80,0},{30,80,0} 
-};
-float output[8][3];
-float tx,ty,tz; 
-float sx,sy,sz; 
-float angle; 
-int choice,choiceRot; 
-void setIdentityM(Matrix4 m) 
-{ 
-for(int i=0;i<4;i++) 
-for(int j=0;j<4;j++) 
- m[i][j]=(i==j);
-} 
-void translate(int tx,int ty,int tz) 
-{ 
-for(int i=0;i<8;i++) 
-{ 
-output[i][0]=input[i][0]+tx; 
-output[i][1]=input[i][1]+ty; 
-output[i][2]=input[i][2]+tz; 
-} 
-} 
-void scale(int sx,int sy,int sz) 
-{ 
- theMatrix[0][0]=sx; 
- theMatrix[1][1]=sy; 
- theMatrix[2][2]=sz; 
-} 
-void RotateX(float angle) //Parallel to x 
-{ 
-angle = angle*3.142/180; 
- theMatrix[1][1] = cos(angle);
-theMatrix[1][2] = -sin(angle);
-theMatrix[2][1] = sin(angle);
-theMatrix[2][2] = cos(angle);
-} 
-void RotateY(float angle) //parallel to y 
-{ 
-angle = angle*3.14/180; 
-theMatrix[0][0] = cos(angle);
-theMatrix[0][2] = -sin(angle);
-theMatrix[2][0] = sin(angle);
-theMatrix[2][2] = cos(angle);
-} 
-void RotateZ(float angle) //parallel to z 
-{ 
-angle = angle*3.14/180; 
-theMatrix[0][0] = cos(angle);
-theMatrix[0][1] = sin(angle);
-theMatrix[1][0] = -sin(angle);
-theMatrix[1][1] = cos(angle);
-} 
-void multiplyM()
-{ 
-//We Don't require 4th row and column in scaling and rotation
-//[8][3]=[8][3]*[3][3] //4th not used
-for(int i=0;i<8;i++) 
-{ 
-for(int j=0;j<3;j++) 
-{ 
-output[i][j]=0; 
-for(int k=0;k<3;k++) 
-{ 
-output[i][j]=output[i][j]+input[i][k]*theMatrix[k][j];
-} 
-} 
-} 
-} 
-void Axes(void) 
-{ 
-glColor3f (0.0, 0.0, 0.0); // Set the color to BLACK 
-glBegin(GL_LINES); // Plotting X-Axis 
-glVertex2s(-1000 ,0);
-glVertex2s( 1000 ,0);
-glEnd();
-glBegin(GL_LINES); // Plotting Y-Axis 
-glVertex2s(0 ,-1000);
-glVertex2s(0 , 1000);
-glEnd();
-} 
-void draw(float a[8][3])
-{ 
-glBegin(GL_QUADS);
- glColor3f(0.7,0.4,0.5); //behind 
- glVertex3fv(a[0]);
- glVertex3fv(a[1]);
- glVertex3fv(a[2]);
- glVertex3fv(a[3]);
- glColor3f(0.8,0.2,0.4); //bottom 
- glVertex3fv(a[0]);
- glVertex3fv(a[1]);
- glVertex3fv(a[5]);
- glVertex3fv(a[4]);
- glColor3f(0.3,0.6,0.7); //left 
- glVertex3fv(a[0]);
- glVertex3fv(a[4]);
- glVertex3fv(a[7]);
- glVertex3fv(a[3]);
- glColor3f(0.2,0.8,0.2); //right 
-glVertex3fv(a[1]);
-glVertex3fv(a[2]);
-glVertex3fv(a[6]);
-glVertex3fv(a[5]);
-glColor3f(0.7,0.7,0.2); //up
-glVertex3fv(a[2]);
-glVertex3fv(a[3]);
-glVertex3fv(a[7]);
-glVertex3fv(a[6]);
-glColor3f(1.0,0.1,0.1);
-glVertex3fv(a[4]);
-glVertex3fv(a[5]);
-glVertex3fv(a[6]);
-glVertex3fv(a[7]);
-glEnd();
-} 
-void init()
-{ 
- glClearColor(1.0,1.0,1.0,1.0); //set backgrond color to white 
-glOrtho(-454.0,454.0,-250.0,250.0,-250.0,250.0);
-// Set the no. of Co-ordinates along X & Y axes and their gappings
- glEnable(GL_DEPTH_TEST);
-// To Render the surfaces Properly according to their depths 
-} 
-void display()
-{ 
-glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-Axes();
-glColor3f(1.0,0.0,0.0);
-draw(input);
-setIdentityM(theMatrix);
-switch(choice) 
-{ 
-case 1: 
- translate(tx,ty,tz);
-break; 
-case 2: 
-scale(sx,sy,sz);
-multiplyM();
-break; 
-case 3: 
-switch (choiceRot) { 
-case 1: 
-RotateX(angle);
-break; 
-case 2: RotateY(angle);
-break; 
-case 3: 
-RotateZ(angle);
-break; 
-default: 
-break; 
-} 
-multiplyM();
-break; 
-} 
-draw(output);
-glFlush(); 
-} 
-int main(int argc, char** argv) 
-{ 
- glutInit(&argc,argv);
- glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB|GLUT_DEPTH);
- glutInitWindowSize(1362,750);
- glutInitWindowPosition(0,0);
- glutCreateWindow("3D TRANSFORMATIONS");
-init();
-cout<<"Enter your choice number:\n1.Translation\n2.Scaling\n3.Rotation\n=>"; 
-cin>>choice; 
-switch (choice) { 
-case 1: 
-cout<<"\nEnter Tx,Ty &Tz: \n"; 
-cin>>tx>>ty>>tz; 
-break; 
-case 2: 
-cout<<"\nEnter Sx,Sy & Sz: \n"; 
-cin>>sx>>sy>>sz; 
-break; 
-case 3: 
-cout<<"Enter your choice for Rotation about axis:\n1.parallel to X-axis."
-<<"(y& z)\n2.parallel to Y-axis.(x& z)\n3.parallel to Z-axis."
-<<"(x& y)\n =>"; 
-cin>>choiceRot; 
-switch (choiceRot) { 
-case 1: 
-cout<<"\nENter Rotation angle: "; 
-cin>>angle; 
-break; 
-case 2: 
-cout<<"\nENter Rotation angle: "; 
-cin>>angle; 
-break; 
-case 3: 
-cout<<"\nENter Rotation angle: "; 
-cin>>angle; 
-break; 
-default: 
-break; 
-} 
-break; 
-default: 
-break; 
-} 
- glutDisplayFunc(display);
- glutMainLoop();
-return 0; 
-} 
+#endif
+
+using namespace std;
+
+float ballX = -0.8f;
+float ballY = -0.3f;
+float ballZ = -1.2f;
+float colR=3.0;
+float colG=1.5;
+float colB=1.0;
+float bgColR=0.0;
+float bgColG=0.0;
+float bgColB=0.0;
+
+static int flag=1;
+
+void drawBall(void) {
+
+        glColor3f(colR,colG,colB); //set ball colour
+        glTranslatef(ballX,ballY,ballZ); //moving it toward the screen a bit on creation
+        glutSolidSphere (0.05, 30, 30); //create ball.
+
+}
+
+void drawAv(void) {
+
+        glBegin(GL_POLYGON);
+        
+        glColor3f(1.0,1.0,1.0);
+   
+        glVertex3f(-0.9,-0.7,-1.0);
+
+        glVertex3f(-0.5,-0.1,-1.0);
+
+        glVertex3f(-0.2,-1.0,-1.0);
+
+        glVertex3f(0.5,0.0,-1.0);
+
+        glVertex3f(0.6,-0.2,-1.0);
+
+        glVertex3f(0.9,-0.7,-1.0);
+
+    glEnd();
+
+}
+
+void drawClouds(){}
+
+void keyPress(int key, int x, int y)
+{
+      if(key==GLUT_KEY_RIGHT)
+        ballX -= 0.05f;
+    if(key==GLUT_KEY_LEFT)
+        ballX  += 0.05f;
+
+    glutPostRedisplay();
+}
+
+void initRendering() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING); //Enable lighting
+    glEnable(GL_LIGHT0); //Enable light #0
+    glEnable(GL_LIGHT1); //Enable light #1
+    glEnable(GL_NORMALIZE); //Automatically normalize normals
+    //glShadeModel(GL_SMOOTH); //Enable smooth shading
+}
+
+//Called when the window is resized
+void handleResize(int w, int h) {
+    //Tell OpenGL how to convert from coordinates to pixel values
+    glViewport(0, 0, w, h);
+    
+    glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
+    
+    //Set the camera perspective
+    glLoadIdentity(); //Reset the camera
+    gluPerspective(45.0,                  //The camera angle
+                   (double)w / (double)h, //The width-to-height ratio
+                   1.0,                   //The near z clipping coordinate
+                   200.0);                //The far z clipping coordinate
+}
+
+void drawScene()
+{
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClearColor(bgColR,bgColG,bgColB,0.0);
+    glMatrixMode(GL_MODELVIEW);
+   
+    glLoadIdentity();
+   
+    //Add ambient light
+    GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+   
+    //Add positioned light
+    GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f}; //Color (0.5, 0.5, 0.5)
+    GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f}; //Positioned at (4, 0, 8)
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+   
+    //Add directed light
+    GLfloat lightColor1[] = {0.5f, 0.2f, 0.2f, 1.0f}; //Color (0.5, 0.2, 0.2)
+    //Coming from the direction (-1, 0.5, 0.5)
+    GLfloat lightPos1[] = {-1.0f, 0.5f, 0.5f, 0.0f};
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
+    glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+
+    //drawing the SUN
+    glPushMatrix();
+        drawBall();
+    glPopMatrix();
+    //drawing the Mount Avarest
+    glPushMatrix();
+        drawAv();
+    glPopMatrix();
+
+    //drawing the Clouds
+    glPushMatrix();
+        drawClouds();
+    glPopMatrix();
+
+    glutSwapBuffers();
+}
+
+//float _angle = 30.0f;
+void update(int value) {
+   
+    if(ballX>0.9f)
+    {
+        ballX = -0.8f;
+        ballY = -0.3f;
+        flag=1;
+        colR=2.0;
+        colG=1.50;
+        colB=1.0;
+
+        bgColB=0.0;
+    }
+   
+    if(flag)
+    {
+    ballX += 0.001f;
+    ballY +=0.0007f;
+    colR-=0.001;
+    //colG+=0.002;
+    colB+=0.005;
+
+    bgColB+=0.001;
+
+       if(ballX>0.01)
+       {
+           flag=0;
+
+       }
+    }
+    if (!flag)
+    {
+        ballX += 0.001f;
+        ballY -=0.0007f;
+        colR+=0.001;
+        colB-=0.01;
+
+        bgColB-=0.001;
+
+        if(ballX<-0.3)
+       {
+           flag=1;
+
+       }
+    }
+   
+    glutPostRedisplay(); //Tell GLUT that the display has changed
+   
+    //Tell GLUT to call update again in 25 milliseconds
+    glutTimerFunc(25, update, 0);
+}
+
+int main(int argc,char** argv)
+{
+    glutInit(&argc,argv);
+   
+    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
+   
+    glutInitWindowSize(400,400);
+   
+    glutCreateWindow("Sun");
+   
+    initRendering();
+   
+    glutDisplayFunc(drawScene);
+
+    glutFullScreen();
+   
+    glutSpecialFunc(keyPress);
+    glutReshapeFunc(handleResize);
+
+    glutTimerFunc(25, update, 0);
+
+    glutMainLoop();
+   
+    return(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Open Graphics Library (OpenGL) is a cross-language (language independent), crossplatform (platform independent) API for rendering 2D and 3D Vector Graphics (use of 
+polygons to represent image). OpenGL is a low-level, widely supported modeling and 
+rendering software package, available across all platforms. It can be used in a range of
+graphics applications, such as games, CAD design, or modeling. OpenGL API is
+designed mostly in hardware.
+ Design: This API is defined as a set of functions which may be called by the client 
+program. Although functions are similar to those of C language but it islanguage
+independent.
+ Development: It is an evolving API and Khronos Group regularly releases its new
+version having some extended feature compare to previous one. GPU vendors may also 
+provide some additional functionality inthe form of extension.
+ Associated Libraries: The earliest version is released with a companion library 
+called OpenGL utility library. But since OpenGL is quite a complex process. So in order to 
+make it easier other library such as OpenGL Utility Toolkit is added which is later 
+superseded by freeglut. Later included library were GLEE, GLEW and glbinding.
+ Implementation: Mesa 3D is an open source implementation of OpenGL. It can 
+do pure software rendering and it may also use hardware acceleration on BSD, Linux,
+and other platforms by taking advantage of Direct Rendering Infrastructure.*/
+
+
