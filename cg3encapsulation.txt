@@ -81,3 +81,72 @@ delay(50000);
 closegraph(); 
 return 0; 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*DDA Line Drawing:
+It is Digital Differential Analyzer (DDA).
+It is also called as Vector generation line drawing algorithm.
+Here we solve the differential equation for straight line. For drawing a line we need to turn ON the pixels which are on the line segment. For this we consider the slope of line.
+Algorithm:
+DDA line(Draw a figure)
+Read the line endpoints (X1, Y1) and (X2, Y2) such that they are not equal.
+1) Calculate
+dx = X2 – X1 dy = Y2 –Y1
+2) if (dx >dy) then step = dx
+else
+end if
+step = dy
+3) Xin = dx / step Yinc = dx / step
+4) put pixel (X1, Y1,1) x = X1
+y = Y1
+5) i = 1
+while (i <= step)
+{
+put pixel( x, ,y 1) x = x + dx
+y = y + dy
+i = i + 1
+}
+Bresenham’s Line Drawing: (Draw a figure) Principle:
+Either x or y is incremented by one unit depending on slope of line and increment in other variable is determined by checking the distance between true line segment and nearest pixel. This distance is called as decision variable.
+Initially this decision variable s set as e = 2 * dy - dx.
+Algorithm:
+1) Read the line endpoints (X1, Y1) and (X2, Y2) such that they are not equal.
+2) Calculate
+dx = X2 – X1 dy = Y2 – Y1
+3) Initialize
+x = X1
+y = Y1
+4) Calculate decision variable e = 2 * dy – dx
+5) i = 1
+put pixel ( x, y,1)
+6) while ( e >= 0)
+{
+y = y + 1
+e = e – 2 * dx
+}
+x = x + 1
+e = e + 2 * dy
+7) i = 1
+8) if ( i <= dx) then go to step
+9) Stop.*/
