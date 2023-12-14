@@ -45,3 +45,74 @@ int main()
     
    return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Stream:
+A stream is a sequence of bytes. It acts as source from which the input data can be obtained or
+as a destination to which the output data can be sent.
+1. InputStream
+Input Streams are used to hold input from a data producer, such as a keyboard, a 
+file, or a network. The source stream that provides data to the program is called the input stream
+2. OutputStream
+Output Streams are used to hold output for a particular data consumer, such as a 
+monitor, a file, or a printer. The destination stream that receives data from the 
+program is called the output stream. 
+ofstream:
+ This data type represents the output file stream and is used to create files 
+and to write information to files.
+ifstream 
+This data type represents the input file stream and is used to read 
+information from files.
+Opening a File
+• A file must be opened before you can read from it or write toit.
+Closing a File
+• When a C++ program terminates it automatically closes flushes all the streams, 
+release all the allocated memory and close all the openedfile
+Writing to a File
+• While doing C++ programming, you write information to a file from your program 
+using the stream insertion operator (<<) just as you use that operator to output 
+information to the screen
+Reading from a File
+• You read information from a file into your program using the stream extraction 
+operator (>>) just as you use that operator to input information from the
+keyboard.
+Algorithm:
+1. Start
+2. Create aclass
+3. Define data members roll number andname.
+4.Define accept() to take name and roll number fromuser.
+5. Define display() to display therecord.
+6. In main() create the object of class and fstream class.
+7.Take a limit from user in nvariable.
+8. Open the file in out mode , call accept() to take record from user,then call write() to write 
+that record into the file and at the end close that file.
+9. Open the file in in mode, read the record from the file ,call display() function to display 
+the record and at the end close that file.
+10. Stop*/
